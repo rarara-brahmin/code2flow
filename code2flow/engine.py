@@ -8,9 +8,6 @@ import sys
 import time
 
 from .python import Python
-from .javascript import Javascript
-from .ruby import Ruby
-from .php import PHP
 from .model import (TRUNK_COLOR, LEAF_COLOR, NODE_COLOR, GROUP_TYPE, OWNER_CONST,
                     Edge, Group, Node, Variable, is_installed, flatten)
 
@@ -41,10 +38,6 @@ LEGEND = """subgraph legend{
 
 LANGUAGES = {
     'py': Python,
-    'js': Javascript,
-    'mjs': Javascript,
-    'rb': Ruby,
-    'php': PHP,
 }
 
 
