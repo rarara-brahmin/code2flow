@@ -288,10 +288,18 @@ def get_sources_and_language(raw_source_paths, language):
 
     individual_files = []
     for source in sorted(raw_source_paths):
+        # raw_source_paths内のファイル/フォルダのツリーリストを作成する。
         if os.path.isfile(source):
             individual_files.append((source, True))
+            # ToDo: individual_filesの要素のTrue/Falseはどういう意味？
+            #  raw_source_paths直下にあるファイルのみTrue？
+            #  そこを区別する必要性は何？
             continue
         for root, _, files in os.walk(source):
+            # os.walkは引数のディレクトリ内を再帰的に走査して
+            # 各ディレクトリ(top自身を含む)ごとに、タプル(dirpath, dirnames, filenames)をyieldする。
+            # sourceがファイルの場合は上でcontinueされているので、ここを通るsourceはすべてディレクトリ。
+            # https://docs.python.org/ja/3/library/os.html#os.walk
             for f in files:
                 individual_files.append((os.path.join(root, f), False))
 
@@ -301,10 +309,15 @@ def get_sources_and_language(raw_source_paths, language):
 
     if not language:
         language = determine_language(individual_files)
+        # 起動時に言語が指定されていない場合はここで決定(推定)する。
+        # ToDo: Expected type 'list[str]', got 'list[tuple[str, bool]]' instead
+        #  という警告が出ている。それはそうなんだけどdetermine_languageではどう使われてんだろうか。
 
     sources = set()
     for source, explicity_added in individual_files:
         if explicity_added or source.endswith('.' + language):
+            # raw_source_paths直下にあるファイルとターゲット言語のソースファイルをsourcesに加える。
+            # ToDo: ここsetなの？ 別階層に同名のファイルあったらゴチャゴチャにならんかね。
             sources.add(source)
         else:
             logging.info("Skipping %r which is not a %s file. "
