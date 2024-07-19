@@ -143,10 +143,11 @@ def get_inherits(tree):
 class Python(BaseLanguage):
     @staticmethod
     def assert_dependencies():
+        # ToDo: 実装されてないけど何？
         pass
 
     @staticmethod
-    def get_tree(filename, _):
+    def get_tree(filename, _) -> ast.AST:
         """
         Get the entire AST for this file
 
@@ -159,7 +160,9 @@ class Python(BaseLanguage):
         except ValueError:
             with open(filename, encoding='UTF-8') as f:
                 raw = f.read()
-        return ast.parse(raw)
+
+        parsed_ast = ast.parse(raw)
+        return parsed_ast
 
     @staticmethod
     def separate_namespaces(tree):
@@ -176,11 +179,14 @@ class Python(BaseLanguage):
         groups = []
         nodes = []
         body = []
+        imports = []
         for el in tree.body:
             if type(el) in (ast.FunctionDef, ast.AsyncFunctionDef):
                 nodes.append(el)
             elif type(el) == ast.ClassDef:
                 groups.append(el)
+            elif type(el) == ast.Import:
+                imports.append(el)
             elif getattr(el, 'body', None):
                 tup = Python.separate_namespaces(el)
                 groups += tup[0]
@@ -188,11 +194,12 @@ class Python(BaseLanguage):
                 body += tup[2]
             else:
                 body.append(el)
-        return groups, nodes, body
+        return groups, nodes, body, imports
 
     @staticmethod
     def make_nodes(tree, parent):
         """
+        node_treeからノードを取り出してリスト化する。
         Given an ast of all the lines in a function, create the node along with the
         calls and variables internal to it.
 
@@ -212,8 +219,11 @@ class Python(BaseLanguage):
         if parent.group_type == GROUP_TYPE.FILE:
             import_tokens = [djoin(parent.token, token)]
 
-        return [Node(token, calls, variables, parent, import_tokens=import_tokens,
-                     line_number=line_number, is_constructor=is_constructor)]
+        ret = [Node(token, calls, variables, parent, import_tokens=import_tokens,
+                    line_number=line_number, is_constructor=is_constructor)]
+        # ToDo: この時点では呼び先の外部モジュールは[Node.calls[n].owner_token]に格納されている。
+        #       呼ばれる側の外部モジュールのNodeを作ってやればグラフ化できるはず。
+        return ret
 
     @staticmethod
     def make_root_node(lines, parent):

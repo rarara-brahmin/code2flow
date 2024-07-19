@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 import time
+import ast
 
 from .python import Python
 from .model import (TRUNK_COLOR, LEAF_COLOR, NODE_COLOR, GROUP_TYPE, OWNER_CONST,
@@ -336,12 +337,12 @@ def get_sources_and_language(raw_source_paths, language):
     return sources, language
 
 
-def make_file_group(tree, filename, extension):
+def make_file_group(tree: ast.AST, filename: str, extension: str) -> Group:
     """
     Given an AST for the entire file, generate a file group complete with
     subgroups, nodes, etc.
 
-    :param tree ast:
+    :param tree ast.AST:
     :param filename str:
     :param extension str:
 
@@ -349,7 +350,8 @@ def make_file_group(tree, filename, extension):
     """
     language = LANGUAGES[extension]
 
-    subgroup_trees, node_trees, body_trees = language.separate_namespaces(tree)
+    subgroup_trees, node_trees, body_trees, import_tree = language.separate_namespaces(tree)
+
     group_type = GROUP_TYPE.FILE
     token = os.path.split(filename)[-1].rsplit('.' + extension, 1)[0]
     line_number = 0
@@ -366,6 +368,11 @@ def make_file_group(tree, filename, extension):
 
     for subgroup_tree in subgroup_trees:
         file_group.add_subgroup(language.make_class_group(subgroup_tree, parent=file_group))
+
+    for import_module in import_tree:
+        # ToDo: importモジュールを取り出してリストに詰めるが、これでいいのかというと？？？
+        file_group.add_import(import_module.names[0])
+
     return file_group
 
 
@@ -389,17 +396,24 @@ def _find_link_for_call(call, node_a, all_nodes):
         if var_match:
             # Unknown modules (e.g. third party) we don't want to match)
             if var_match == OWNER_CONST.UNKNOWN_MODULE:
-                return None, None
+                # ToDo: 外部モジュールがここでUNKNOWN_MODULEとしてまとめられて捨てられるので
+                #  ここの戻り値を上位でどう受けるかを考える必要がある。
+                #  最終的にグラフに入ってくるのはnodeなので、どうnodeとしてまとめるか？
+                return None, None, None
             assert isinstance(var_match, Node)
-            return var_match, None
+            return var_match, None, None
 
     possible_nodes = []
+    impossible_nodes = []
     if call.is_attr():
         for node in all_nodes:
             # checking node.parent != node_a.file_group() prevents self linkage in cases like
             # function a() {b = Obj(); b.a()}
-            if call.token == node.token and node.parent != node_a.file_group():
+            node_a_file_group = node_a.file_group()
+            if call.token == node.token and node.parent != node_a_file_group:
                 possible_nodes.append(node)
+            else:
+                impossible_nodes.append((node, 1))
     else:
         for node in all_nodes:
             if call.token == node.token \
@@ -408,12 +422,14 @@ def _find_link_for_call(call, node_a, all_nodes):
                 possible_nodes.append(node)
             elif call.token == node.parent.token and node.is_constructor:
                 possible_nodes.append(node)
+            else:
+                impossible_nodes.append((node, 2))
 
     if len(possible_nodes) == 1:
-        return possible_nodes[0], None
+        return possible_nodes[0], None, None
     if len(possible_nodes) > 1:
-        return None, call
-    return None, None
+        return None, call, (possible_nodes, impossible_nodes)
+    return None, None, None
 
 
 def _find_links(node_a, all_nodes):
@@ -429,7 +445,8 @@ def _find_links(node_a, all_nodes):
 
     links = []
     for call in node_a.calls:
-        lfc = _find_link_for_call(call, node_a, all_nodes)
+        _possible_node, _call, _nodes = _find_link_for_call(call, node_a, all_nodes)
+        lfc = (_possible_node, _call)
         assert not isinstance(lfc, Group)
         links.append(lfc)
     return list(filter(None, links))
@@ -438,7 +455,7 @@ def _find_links(node_a, all_nodes):
 def map_it(sources, extension, no_trimming, exclude_namespaces, exclude_functions,
            include_only_namespaces, include_only_functions,
            skip_parse_errors, lang_params):
-    '''
+    """
     Given a language implementation and a list of filenames, do these things:
     1. Read/parse source ASTs
     2. Find all groups (classes/modules) and nodes (functions) (a lot happens here)
@@ -460,7 +477,7 @@ def map_it(sources, extension, no_trimming, exclude_namespaces, exclude_function
     :param LanguageParams lang_params:
 
     :rtype: (list[Group], list[Node], list[Edge])
-    '''
+    """
 
     language = LANGUAGES[extension]
 
@@ -468,7 +485,7 @@ def map_it(sources, extension, no_trimming, exclude_namespaces, exclude_function
     language.assert_dependencies()
 
     # 1. Read/parse source ASTs
-    file_ast_trees = []
+    file_ast_trees: list[(str, ast.AST)] = []
     for source in sources:
         try:
             file_ast_trees.append((source, language.get_tree(source, lang_params)))
@@ -478,7 +495,7 @@ def map_it(sources, extension, no_trimming, exclude_namespaces, exclude_function
             else:
                 raise ex
 
-    # 2. Find all groups (classes/modules) and nodes (functions) (a lot happens here)
+    # 2. Find all groups (classes/modules), nodes (functions) (a lot happens here) and external-modules
     file_groups = []
     for source, file_ast_tree in file_ast_trees:
         file_group = make_file_group(file_ast_tree, source, extension)
@@ -491,6 +508,7 @@ def map_it(sources, extension, no_trimming, exclude_namespaces, exclude_function
         file_groups = _limit_functions(file_groups, exclude_functions, include_only_functions)
 
     # 4. Consolidate structures
+    # ToDo: sub_groupって使われてるんだろうか
     all_subgroups = flatten(g.all_groups() for g in file_groups)
     all_nodes = flatten(g.all_nodes() for g in file_groups)
 
@@ -717,16 +735,27 @@ def code2flow(raw_source_paths, output_file, language=None, hide_legend=True,
     logging.basicConfig(format="Code2Flow: %(message)s", level=level)
 
     sources, language = get_sources_and_language(raw_source_paths, language)
+    # ここでソースのリストを取得、言語を推定
+    # ToDo: sourcesにpipでインストールしたパッケージが含まれていない。まぁそりゃそうか？
+    #  でもどの関数がどのパッケージ呼んでるかとか知りたいんだけどなぁ。
+    #  AST木内のast.Importにimportしたパッケージの名前は入ってるからたどれるはず。
 
     output_ext = None
     if isinstance(output_file, str):
+        # output_fileがstr型の場合にTrue
+        # https://docs.python.org/ja/3/library/functions.html#isinstance
         assert '.' in output_file, "Output filename must end in one of: %r." % set(VALID_EXTENSIONS)
+
         output_ext = output_file.rsplit('.', 1)[1] or ''
+        # output_fileの拡張子を取り出す。
+        # 最大分割回数1回でindex=1を指定するとaaa.bbb.cccのcccが取り出せる。
         assert output_ext in VALID_EXTENSIONS, "Output filename must end in one of: %r." % \
                                                set(VALID_EXTENSIONS)
 
     final_img_filename = None
+    extension = None
     if output_ext and output_ext in IMAGE_EXTENSIONS:
+        # ToDo: １個目のoutput_extいるんだっけ？ 例外出る？
         if not is_installed('dot') and not is_installed('dot.exe'):
             raise AssertionError(
                 "Can't generate a flowchart image because neither `dot` nor "
@@ -787,7 +816,7 @@ def main(sys_argv=None):
         'sources', metavar='sources', nargs='+',
         help='source code file/directory paths.')
     parser.add_argument(
-        '--output', '-o', default='out.png',
+        '--output', '-o', default='out.svg',
         help=f'output file path. Supported types are {VALID_EXTENSIONS}.')
     parser.add_argument(
         '--language', choices=['py', 'js', 'rb', 'php'],
@@ -799,7 +828,8 @@ def main(sys_argv=None):
              'Valid formats include `func`, `class.func`, and `file::class.func`. '
              'Requires --upstream-depth and/or --downstream-depth. ')
     parser.add_argument(
-        '--upstream-depth', type=int, default=0,
+        '--upst'
+        'ream-depth', type=int, default=0,
         help='include n nodes upstream of --target-function.')
     parser.add_argument(
         '--downstream-depth', type=int, default=0,

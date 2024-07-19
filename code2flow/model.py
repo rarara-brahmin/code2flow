@@ -19,6 +19,7 @@ class Namespace(dict):
         d.update(dict(kwargs.items()))
         super().__init__(d)
 
+
     def __getattr__(self, item):
         return self[item]
 
@@ -74,12 +75,16 @@ def _resolve_str_variable(variable, file_groups):
     :rtype: Node|Group|str
     """
     for file_group in file_groups:
-        for node in file_group.all_nodes():
+        all_nodes = file_group.all_nodes()
+        for node in all_nodes:
             if any(ot == variable.points_to for ot in node.import_tokens):
                 return node
-        for group in file_group.all_groups():
+
+        all_groups = file_group.all_groups()
+        for group in all_groups:
             if any(ot == variable.points_to for ot in group.import_tokens):
                 return group
+
     return OWNER_CONST.UNKNOWN_MODULE
 
 
@@ -271,6 +276,7 @@ class Node():
         self.is_constructor = is_constructor
 
         self.uid = "node_" + os.urandom(4).hex()
+        # ToDo: uidが重複するのを防げない？暗号学的に安全な乱数なので大丈夫かも？
 
         # Assume it is a leaf and a trunk. These are modified later
         self.is_leaf = True  # it calls nothing else
@@ -503,6 +509,7 @@ class Group():
         self.display_type = display_type
         self.import_tokens = import_tokens or []
         self.inherits = inherits or []
+        self.imports = []
         assert group_type in GROUP_TYPE
 
         self.uid = "cluster_" + os.urandom(4).hex()  # group doesn't work by syntax rules
@@ -545,6 +552,9 @@ class Group():
         self.nodes.append(node)
         if is_root:
             self.root_node = node
+
+    def add_import(self, import_module):
+        self.imports.append(import_module)
 
     def all_nodes(self):
         """
