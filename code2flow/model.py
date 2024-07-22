@@ -217,6 +217,13 @@ class Call():
 
     def matches_variable(self, variable):
         """
+        この変数が呼び出しの対象であるかどうかを確認する。
+        例えば'obj'という変数が以下の式から生成され、
+            obj = Obj()
+        以下のように呼び出された場合、
+            obj.do_something()
+        do_somethingノードがobjからリターンされる。
+
         Check whether this variable is what the call is acting on.
         For example, if we had 'obj' from
             obj = Obj()
@@ -229,8 +236,17 @@ class Call():
         """
 
         if self.is_attr():
+            # ToDo: このowner_token == variable.tokenという判定がライブラリの呼び出しを誤判定させている？
+            #    ライブラリの呼び出しはvar = lib_name.func_name()という形になるので上記が真にならない？
+            #    (ライブラリ呼び出し時はowner_token: lib_name, variable.token: varになる）
+            #    このowner_tokenというのはどこで入力されるのか。
+            #    ⇒owner_tokenはpython.py get_call_from_func_element()で格納されている。
+            #      格納対象はCallクラスのfuncプロパティ(Name型)のidプロパティである。
+            #      https://docs.python.org/3/library/ast.html#ast.Call
+            #    クラス関係ない関数コールの場合はこのルートを通らないのであまり関係ないかもしれない。
             if self.owner_token == variable.token:
                 for node in getattr(variable.points_to, 'nodes', []):
+                    # variable.point_toオブジェクトのnodes属性(nodeのリスト?)を取り出す。
                     if self.token == node.token:
                         return node
                 for inherit_nodes in getattr(variable.points_to, 'inherits', []):
@@ -564,6 +580,16 @@ class Group():
         ret = list(self.nodes)
         for subgroup in self.subgroups:
             ret += subgroup.all_nodes()
+        return ret
+
+    def all_imports(self):
+        """
+        List of nodes that are part of this group + all subgroups
+        :rtype: list[Node]
+        """
+        ret = list(self.imports)
+        for subgroup in self.subgroups:
+            ret += subgroup.all_imports()
         return ret
 
     def get_constructor(self):

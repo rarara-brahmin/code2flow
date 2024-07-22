@@ -10,7 +10,7 @@ import ast
 
 from .python import Python
 from .model import (TRUNK_COLOR, LEAF_COLOR, NODE_COLOR, GROUP_TYPE, OWNER_CONST,
-                    Edge, Group, Node, Variable, is_installed, flatten)
+                    Edge, Group, Node, Variable, is_installed, flatten, Call)
 
 VERSION = '2.5.1'
 
@@ -351,6 +351,7 @@ def make_file_group(tree: ast.AST, filename: str, extension: str) -> Group:
     language = LANGUAGES[extension]
 
     subgroup_trees, node_trees, body_trees, import_tree = language.separate_namespaces(tree)
+    # tree内のast要素を分類してリストにして返す。
 
     group_type = GROUP_TYPE.FILE
     token = os.path.split(filename)[-1].rsplit('.' + extension, 1)[0]
@@ -361,6 +362,7 @@ def make_file_group(tree: ast.AST, filename: str, extension: str) -> Group:
     file_group = Group(token, group_type, display_name, import_tokens,
                        line_number, parent=None)
     for node_tree in node_trees:
+        # node_treeはast.FunctionDef or ast.AsyncFunctionDef
         for new_node in language.make_nodes(node_tree, parent=file_group):
             file_group.add_node(new_node)
 
@@ -369,14 +371,21 @@ def make_file_group(tree: ast.AST, filename: str, extension: str) -> Group:
     for subgroup_tree in subgroup_trees:
         file_group.add_subgroup(language.make_class_group(subgroup_tree, parent=file_group))
 
+    # for import_module in import_tree:
+    #     # ToDo: importモジュールを取り出してリストに詰めるが、これでいいのかというと？？？
+    #     file_group.add_import(import_module.names[0])
     for import_module in import_tree:
-        # ToDo: importモジュールを取り出してリストに詰めるが、これでいいのかというと？？？
-        file_group.add_import(import_module.names[0])
+        for new_node in language.make_import_module_nodes(import_module, parent=file_group):
+            file_group.add_import(new_node)
+    # Todo: import_treeはast.Import（ast.FunctionDefとの構造の違いに注意）
+    #  なのでこれをdot言語に起こせるように成形してNodeに詰める。
+    #  dot言語作成時に読む属性はlabel, name, shape, style, fillcolor
+    #  （詳細はmodel.py Node.to_dot()参照）
 
     return file_group
 
 
-def _find_link_for_call(call, node_a, all_nodes):
+def _find_link_for_call(call: Call, node_a: Node, all_nodes: list[Node]):
     """
     Given a call that happened on a node (node_a), return the node
     that the call links to and the call itself if >1 node matched.
@@ -396,9 +405,6 @@ def _find_link_for_call(call, node_a, all_nodes):
         if var_match:
             # Unknown modules (e.g. third party) we don't want to match)
             if var_match == OWNER_CONST.UNKNOWN_MODULE:
-                # ToDo: 外部モジュールがここでUNKNOWN_MODULEとしてまとめられて捨てられるので
-                #  ここの戻り値を上位でどう受けるかを考える必要がある。
-                #  最終的にグラフに入ってくるのはnodeなので、どうnodeとしてまとめるか？
                 return None, None, None
             assert isinstance(var_match, Node)
             return var_match, None, None
@@ -432,10 +438,11 @@ def _find_link_for_call(call, node_a, all_nodes):
     return None, None, None
 
 
-def _find_links(node_a, all_nodes):
+def _find_links(node_a: Node, all_nodes):
     """
     Iterate through the calls on node_a to find everything the node links to.
-    This will return a list of tuples of nodes and calls that were ambiguous.
+    This will return a list of tuples of nodes and calls that were ambiguous.\n
+    node_aからのリンク先を抽出する。
 
     :param Node node_a:
     :param list[Node] all_nodes:
@@ -479,6 +486,8 @@ def map_it(sources, extension, no_trimming, exclude_namespaces, exclude_function
     :rtype: (list[Group], list[Node], list[Edge])
     """
 
+    # ToDo: ここの関数でimportモジュールをnodeに詰めて、呼び出し関係をedgeに詰めれば勝ち
+
     language = LANGUAGES[extension]
 
     # 0. Assert dependencies
@@ -508,9 +517,10 @@ def map_it(sources, extension, no_trimming, exclude_namespaces, exclude_function
         file_groups = _limit_functions(file_groups, exclude_functions, include_only_functions)
 
     # 4. Consolidate structures
-    # ToDo: sub_groupって使われてるんだろうか
+    # file_groupsに階層化してあるnodesとsubgroupsをここで同一階層に展開する。
     all_subgroups = flatten(g.all_groups() for g in file_groups)
     all_nodes = flatten(g.all_nodes() for g in file_groups)
+    all_imports = flatten(g.all_imports() for g in file_groups)
 
     nodes_by_subgroup_token = collections.defaultdict(list)
     for subgroup in all_subgroups:
@@ -543,7 +553,7 @@ def map_it(sources, extension, no_trimming, exclude_namespaces, exclude_function
     bad_calls = []
     edges = []
     for node_a in list(all_nodes):
-        links = _find_links(node_a, all_nodes)
+        links = _find_links(node_a, all_nodes + all_imports)
         for node_b, bad_call in links:
             if bad_call:
                 bad_calls.append(bad_call)

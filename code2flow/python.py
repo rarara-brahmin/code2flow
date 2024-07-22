@@ -21,7 +21,8 @@ def get_call_from_func_element(func):
         val = func.value
         while True:
             try:
-                owner_token.append(getattr(val, 'attr', val.id))
+                val_attr = getattr(val, 'attr', val.id)
+                owner_token.append(val_attr)
             except AttributeError:
                 pass
             val = getattr(val, 'value', None)
@@ -29,7 +30,9 @@ def get_call_from_func_element(func):
                 break
         if owner_token:
             owner_token = djoin(*reversed(owner_token))
+            # owner_token(リスト)の要素を.で連結してstrで返す
         else:
+            # ここを通るのはfunc.valueにattrという属性もidという属性もない場合。
             owner_token = OWNER_CONST.UNKNOWN_VAR
         return Call(token=func.attr, line_number=func.lineno, owner_token=owner_token)
     if type(func) == ast.Name:
@@ -177,7 +180,7 @@ class Python(BaseLanguage):
         :rtype: (list[ast], list[ast], list[ast])
         """
         groups = []
-        nodes = []
+        nodes: list[Node] = []
         body = []
         imports = []
         for el in tree.body:
@@ -226,6 +229,41 @@ class Python(BaseLanguage):
         return ret
 
     @staticmethod
+    def make_import_module_nodes(import_module: ast.Import, parent):
+        """
+        ToDo: make_nodesメソッドをベースにしてimportモジュールをノード化したい。
+          import_treeからimportモジュールをnode化するようにmake_nodesを改造する。
+
+        Todo: import_treeはast.Import（ast.FunctionDefとの構造の違いに注意）
+         なのでこれをdot言語に起こせるように成形してNodeに詰める。
+         dot言語作成時に読む属性はlabel, name, shape, style, fillcolor
+         （詳細はmodel.py Node.to_dot()参照）
+        :param tree ast.Import:
+        :param parent Group:
+        :rtype: list[Node]
+        """
+
+        name = import_module.names[0].name
+        # ToDo: 多分これではだめ。import a, b, cみたいな場合に対応できない。
+
+        token = name
+        line_number = import_module.lineno
+        # calls = make_calls(tree.body) # いらない？
+        # variables = make_local_variables(tree.body, parent)
+        # is_constructor = False
+        # if parent.group_type == GROUP_TYPE.CLASS and token in ['__init__', '__new__']:
+        #     is_constructor = True
+
+        import_tokens = []
+        if parent.group_type == GROUP_TYPE.FILE:
+            import_tokens = [djoin(parent.token, token)]
+
+        ret = [Node(token, None, None, parent, import_tokens=import_tokens,
+                    line_number=line_number, is_constructor=False)]
+
+        return ret
+
+    @staticmethod
     def make_root_node(lines, parent):
         """
         The "root_node" is an implict node of lines which are executed in the global
@@ -253,7 +291,7 @@ class Python(BaseLanguage):
         :rtype: Group
         """
         assert type(tree) == ast.ClassDef
-        subgroup_trees, node_trees, body_trees = Python.separate_namespaces(tree)
+        subgroup_trees, node_trees, body_trees, import_trees = Python.separate_namespaces(tree)
 
         group_type = GROUP_TYPE.CLASS
         token = tree.name
