@@ -350,6 +350,8 @@ def make_file_group(tree: ast.AST, filename: str, extension: str) -> Group:
     """
     language = LANGUAGES[extension]
 
+    # ToDo: tree.body[4].body[1].targets[0].idにreqが格納されている。
+    #   reqではなくrequest.getをnode_trees内にNodeとして登録したい。
     subgroup_trees, node_trees, body_trees, import_tree = language.separate_namespaces(tree)
     # tree内のast要素を分類してリストにして返す。
 
@@ -398,9 +400,23 @@ def _find_link_for_call(call: Call, node_a: Node, all_nodes: list[Node]):
     :rtype: (Node|None, Call|None)
     """
 
+    # ToDo: ここで呼び元の解析を行って変数をリストアップしているっぽい？
+    #   ⇒ここではcall.line_numberが特定されているのでこれより前のcallを登録する部分に手を入れないとダメでは？
+    #   ⇒node_a(token=print_hi).calls[1]でowner_tokenがrequestsになっているので登録はされている。
+
+    if getattr(call, "owner_token") == "requests":
+        pass
+        # デバッグ用。ブレイクポイントいらなくなったら消す。
+    else:
+        pass
+
     all_vars = node_a.get_variables(call.line_number)
 
     for var in all_vars:
+        if getattr(var.points_to, "owner_token", None) == "requests":
+            pass
+            # デバッグ用。ブレイクポイントいらなくなったら消す。
+
         var_match = call.matches_variable(var)
         if var_match:
             # Unknown modules (e.g. third party) we don't want to match)
@@ -553,6 +569,7 @@ def map_it(sources, extension, no_trimming, exclude_namespaces, exclude_function
     bad_calls = []
     edges = []
     for node_a in list(all_nodes):
+        # ToDo: ここのall_nodesに外部モジュールの関数を呼び出している部分が入っていないので入れる。
         links = _find_links(node_a, all_nodes + all_imports)
         for node_b, bad_call in links:
             if bad_call:

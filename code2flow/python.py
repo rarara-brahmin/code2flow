@@ -179,10 +179,16 @@ class Python(BaseLanguage):
                   downstream into real Groups and Nodes.
         :rtype: (list[ast], list[ast], list[ast])
         """
+
+        # ToDo: 最上位階層の呼び出し時にtree.body[4].body[1].targets[0].idにreqが格納されている。
+        #   reqではなくrequest.getをnode_trees内にNodeとして登録したい。
+        #   ⇒この時点では呼び先のノードを登録しているだけであって、呼び元の解析まで行っているわけではない？
+        # ToDo: では呼び元の解析まで行って、呼び先と繋げているのはどの処理か？
         groups = []
         nodes: list[Node] = []
         body = []
         imports = []
+
         for el in tree.body:
             if type(el) in (ast.FunctionDef, ast.AsyncFunctionDef):
                 nodes.append(el)

@@ -243,7 +243,6 @@ class Call():
             #    ⇒owner_tokenはpython.py get_call_from_func_element()で格納されている。
             #      格納対象はCallクラスのfuncプロパティ(Name型)のidプロパティである。
             #      https://docs.python.org/3/library/ast.html#ast.Call
-            #    クラス関係ない関数コールの場合はこのルートを通らないのであまり関係ないかもしれない。
             if self.owner_token == variable.token:
                 for node in getattr(variable.points_to, 'nodes', []):
                     # variable.point_toオブジェクトのnodes属性(nodeのリスト?)を取り出す。
@@ -255,6 +254,11 @@ class Call():
                             return node
                 if variable.points_to in OWNER_CONST:
                     return variable.points_to
+            else:
+                # ToDo: owner_token == variable.tokenの条件を満たしていなくても通してよいケースとは？
+                #   ⇒ライブラリの呼び出しである場合。
+                #    ライブラリの一覧を持っておいてowner_tokenと照合する？
+                pass
 
             # This section is specifically for resolving namespace variables
             if isinstance(variable.points_to, Group) \
