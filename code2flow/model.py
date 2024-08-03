@@ -189,11 +189,12 @@ class Call():
         do_something()
 
     """
-    def __init__(self, token, line_number=None, owner_token=None, definite_constructor=False):
+    def __init__(self, token, line_number=None, owner_token=None, definite_constructor=False, is_library=False):
         self.token = token
         self.owner_token = owner_token
         self.line_number = line_number
         self.definite_constructor = definite_constructor
+        self.is_library = is_library
 
     def __repr__(self):
         return f"<Call owner_token={self.owner_token} token={self.token}>"
@@ -243,7 +244,12 @@ class Call():
             #    ⇒owner_tokenはpython.py get_call_from_func_element()で格納されている。
             #      格納対象はCallクラスのfuncプロパティ(Name型)のidプロパティである。
             #      https://docs.python.org/3/library/ast.html#ast.Call
-            if self.owner_token == variable.token:
+            if self.owner_token == variable.token or self.is_library:
+                # ToDo: owner_token == variable.tokenの条件を満たしていなくても通してよいケースとは？
+                #   ⇒ライブラリの呼び出しである場合。
+                #    ライブラリの一覧を持っておいてowner_tokenと照合する？
+                #    Callの中にライブラリか否かの情報を持っておけないだろうか？
+                #   ⇒持たせてみた
                 for node in getattr(variable.points_to, 'nodes', []):
                     # variable.point_toオブジェクトのnodes属性(nodeのリスト?)を取り出す。
                     if self.token == node.token:
@@ -254,11 +260,6 @@ class Call():
                             return node
                 if variable.points_to in OWNER_CONST:
                     return variable.points_to
-            else:
-                # ToDo: owner_token == variable.tokenの条件を満たしていなくても通してよいケースとは？
-                #   ⇒ライブラリの呼び出しである場合。
-                #    ライブラリの一覧を持っておいてowner_tokenと照合する？
-                pass
 
             # This section is specifically for resolving namespace variables
             if isinstance(variable.points_to, Group) \
@@ -286,7 +287,7 @@ class Call():
 
 class Node():
     def __init__(self, token, calls, variables, parent, import_tokens=None,
-                 line_number=None, is_constructor=False):
+                 line_number=None, is_constructor=False, is_library=False):
         self.token = token
         self.line_number = line_number
         self.calls = calls
@@ -294,6 +295,7 @@ class Node():
         self.import_tokens = import_tokens or []
         self.parent = parent
         self.is_constructor = is_constructor
+        self.is_library = is_library
 
         self.uid = "node_" + os.urandom(4).hex()
         # ToDo: uidが重複するのを防げない？暗号学的に安全な乱数なので大丈夫かも？

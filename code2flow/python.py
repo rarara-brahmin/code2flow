@@ -34,7 +34,17 @@ def get_call_from_func_element(func):
         else:
             # ここを通るのはfunc.valueにattrという属性もidという属性もない場合。
             owner_token = OWNER_CONST.UNKNOWN_VAR
-        return Call(token=func.attr, line_number=func.lineno, owner_token=owner_token)
+
+        func_value = getattr(func, "value", None)
+        lib_name = None
+        is_library = False
+        if func_value:
+            lib_name = getattr(func_value, "id", None)
+
+        if lib_name:
+            is_library = True
+
+        return Call(token=func.attr, line_number=func.lineno, owner_token=owner_token, is_library=is_library)
     if type(func) == ast.Name:
         return Call(token=func.id, line_number=func.lineno)
     if type(func) in (ast.Subscript, ast.Call):
@@ -265,7 +275,7 @@ class Python(BaseLanguage):
             import_tokens = [djoin(parent.token, token)]
 
         ret = [Node(token, None, None, parent, import_tokens=import_tokens,
-                    line_number=line_number, is_constructor=False)]
+                    line_number=line_number, is_constructor=False, is_library=True)]
 
         return ret
 

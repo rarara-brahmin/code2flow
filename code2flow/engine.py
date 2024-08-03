@@ -422,10 +422,12 @@ def _find_link_for_call(call: Call, node_a: Node, all_nodes: list[Node]):
             # Unknown modules (e.g. third party) we don't want to match)
             if var_match == OWNER_CONST.UNKNOWN_MODULE:
                 return None, None, None
-            assert isinstance(var_match, Node)
+            # assert isinstance(var_match, Node)
             return var_match, None, None
 
     possible_nodes = []
+    # code.tokenがnode.tokenであるもの
+
     impossible_nodes = []
     if call.is_attr():
         for node in all_nodes:
