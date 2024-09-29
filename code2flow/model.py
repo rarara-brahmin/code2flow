@@ -236,6 +236,10 @@ class Call():
         :rtype: Node
         """
 
+        if variable.token == "req":
+            pass
+            # デバッグ用。ブレイクポイントいらなくなったら消す。
+
         if self.is_attr():
             # ToDo: このowner_token == variable.tokenという判定がライブラリの呼び出しを誤判定させている？
             #    ライブラリの呼び出しはvar = lib_name.func_name()という形になるので上記が真にならない？
@@ -254,12 +258,18 @@ class Call():
                     # variable.point_toオブジェクトのnodes属性(nodeのリスト?)を取り出す。
                     if self.token == node.token:
                         return node
+
                 for inherit_nodes in getattr(variable.points_to, 'inherits', []):
                     for node in inherit_nodes:
                         if self.token == node.token:
                             return node
+
                 if variable.points_to in OWNER_CONST:
                     return variable.points_to
+
+                # ToDo:requests.getをNodeとして返してあげる処理を書く必要あり。
+
+
 
             # This section is specifically for resolving namespace variables
             if isinstance(variable.points_to, Group) \

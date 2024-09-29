@@ -378,11 +378,14 @@ def make_file_group(tree: ast.AST, filename: str, extension: str) -> Group:
     #     file_group.add_import(import_module.names[0])
     for import_module in import_tree:
         for new_node in language.make_import_module_nodes(import_module, parent=file_group):
-            file_group.add_import(new_node)
+            # file_group.add_import(new_node)
+            file_group.add_node(new_node)
     # Todo: import_treeはast.Import（ast.FunctionDefとの構造の違いに注意）
     #  なのでこれをdot言語に起こせるように成形してNodeに詰める。
     #  dot言語作成時に読む属性はlabel, name, shape, style, fillcolor
     #  （詳細はmodel.py Node.to_dot()参照）
+    #  add_node(new_node)では、new_node側にNodeの構造を持たせて、add_nodeはlistにappendしているだけ。
+    #  Nodeの構造はPython.make_nodes()参照。
 
     return file_group
 
@@ -558,6 +561,9 @@ def map_it(sources, extension, no_trimming, exclude_namespaces, exclude_function
     # 5. Attempt to resolve the variables (point them to a node or group)
     for node in all_nodes:
         node.resolve_variables(file_groups)
+        # Todo:↑にfile_groupだけではなくlib_groupも追加して解決してやる必要があるのでは？
+        #      file_groupの要素にimportsも入っているので大丈夫のはず。
+        
 
     # Not a step. Just log what we know so far
     logging.info("Found groups %r." % [g.label() for g in all_subgroups])

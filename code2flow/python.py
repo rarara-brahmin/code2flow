@@ -139,6 +139,8 @@ def make_local_variables(lines, parent):
         variables.append(Variable('self', parent, lines[0].lineno))
 
     variables = list(filter(None, variables))
+    # Trueとなるオブジェクトのみを取り出して再リスト化
+
     return variables
 
 
@@ -216,7 +218,7 @@ class Python(BaseLanguage):
         return groups, nodes, body, imports
 
     @staticmethod
-    def make_nodes(tree, parent):
+    def make_nodes(tree, parent) -> list[Node]:
         """
         node_treeからノードを取り出してリスト化する。
         Given an ast of all the lines in a function, create the node along with the
@@ -259,7 +261,10 @@ class Python(BaseLanguage):
         :rtype: list[Node]
         """
 
+        # ToDo: Node.variableを詰める必要あり
         name = import_module.names[0].name
+        token = name
+        line_number = import_module.lineno
         # ToDo: 多分これではだめ。import a, b, cみたいな場合に対応できない。
 
         token = name
