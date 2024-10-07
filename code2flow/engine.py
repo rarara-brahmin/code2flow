@@ -352,7 +352,7 @@ def make_file_group(tree: ast.AST, filename: str, extension: str) -> Group:
 
     # ToDo: tree.body[4].body[1].targets[0].idにreqが格納されている。
     #   reqではなくrequest.getをnode_trees内にNodeとして登録したい。
-    subgroup_trees, node_trees, body_trees, import_tree = language.separate_namespaces(tree)
+    subgroup_trees, node_trees, body_trees = language.separate_namespaces(tree)
     # tree内のast要素を分類してリストにして返す。
 
     group_type = GROUP_TYPE.FILE

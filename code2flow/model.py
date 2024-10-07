@@ -486,9 +486,9 @@ def _wrap_as_variables(sequence):
 
 
 class Edge():
-    def __init__(self, node0, node1):
-        self.node0 = node0
-        self.node1 = node1
+    def __init__(self, node0: Node, node1: Node):
+        self.node0: Node = node0
+        self.node1: Node = node1
 
         # When we draw the edge, we know the calling function is definitely not a leaf...
         # and the called function is definitely not a trunk

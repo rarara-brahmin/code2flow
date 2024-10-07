@@ -199,15 +199,12 @@ class Python(BaseLanguage):
         groups = []
         nodes: list[Node] = []
         body = []
-        imports = []
 
         for el in tree.body:
-            if type(el) in (ast.FunctionDef, ast.AsyncFunctionDef):
+            if type(el) in (ast.FunctionDef, ast.AsyncFunctionDef, ast.Import):
                 nodes.append(el)
             elif type(el) == ast.ClassDef:
                 groups.append(el)
-            elif type(el) == ast.Import:
-                imports.append(el)
             elif getattr(el, 'body', None):
                 tup = Python.separate_namespaces(el)
                 groups += tup[0]
@@ -215,10 +212,10 @@ class Python(BaseLanguage):
                 body += tup[2]
             else:
                 body.append(el)
-        return groups, nodes, body, imports
+        return groups, nodes, body
 
     @staticmethod
-    def make_nodes(tree, parent) -> list[Node]:
+    def make_nodes(tree: ast.AST, parent: Group) -> list[Node]:
         """
         node_treeからノードを取り出してリスト化する。
         Given an ast of all the lines in a function, create the node along with the
@@ -312,7 +309,7 @@ class Python(BaseLanguage):
         :rtype: Group
         """
         assert type(tree) == ast.ClassDef
-        subgroup_trees, node_trees, body_trees, import_trees = Python.separate_namespaces(tree)
+        subgroup_trees, node_trees, body_trees = Python.separate_namespaces(tree)
 
         group_type = GROUP_TYPE.CLASS
         token = tree.name
