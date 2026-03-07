@@ -46,3 +46,4 @@ def test_variable_accepts_falsy_non_none_points_to():
     v = Variable('z', 0)
     assert v.points_to == 0
     assert v.to_string() == 'z->0'
+

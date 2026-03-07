@@ -1,0 +1,79 @@
+digraph G {
+concentrate=true;
+splines="ortho";
+rankdir="LR";
+subgraph legend{
+    rank = min;
+    label = "legend";
+    Legend [shape=none, margin=0, label = <
+        <table cellspacing="0" cellpadding="0" border="1"><tr><td>Code2flow Legend</td></tr><tr><td>
+        <table cellspacing="0">
+        <tr><td>Regular function</td><td width="50px" bgcolor='#cccccc'></td></tr>
+        <tr><td>Trunk function (nothing calls this)</td><td bgcolor='#966F33'></td></tr>
+        <tr><td>Leaf function (this calls nothing else)</td><td bgcolor='#6db33f'></td></tr>
+        <tr><td>Function call</td><td><font color='black'>&#8594;</font></td></tr>
+        </table></td></tr></table>
+        >];
+}node_9c5bfca8 [label="0: (global)()" name="inherits::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_7eb2c663 [label="22: __init__()" name="inherits::ScaleDemo.__init__" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_0c281a75 [label="32: __init__()" name="inherits::ScaleDemoLimited.__init__" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_603e1b3c [label="6: majorNum()" name="inherits::majorNum" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_73653472 [label="5: baseNum()" name="inherits_import::BaseScales.baseNum" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_b955e9fa [label="10: majorNum()" name="inherits_import::MajorScales.majorNum" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_4a12c70e [label="18: pentaNum()" name="inherits_import::PentatonicScales.pentaNum" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_9c5bfca8 -> node_7eb2c663 [color="#000000" penwidth="2"];
+node_9c5bfca8 -> node_603e1b3c [color="#000000" penwidth="2"];
+node_7eb2c663 -> node_b955e9fa [color="#009E73" penwidth="2"];
+node_7eb2c663 -> node_4a12c70e [color="#009E73" penwidth="2"];
+node_0c281a75 -> node_b955e9fa [color="#0072B2" penwidth="2"];
+node_b955e9fa -> node_73653472 [color="#56B4E9" penwidth="2"];
+node_4a12c70e -> node_73653472 [color="#D55E00" penwidth="2"];
+subgraph cluster_03c21c20 {
+    node_9c5bfca8 node_603e1b3c;
+    label="File: inherits";
+    name="inherits";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_815decc0 {
+        node_7eb2c663;
+        label="Class: ScaleDemo";
+        name="ScaleDemo";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_dbade714 {
+        node_0c281a75;
+        label="Class: ScaleDemoLimited";
+        name="ScaleDemoLimited";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_0ce59e5a {
+    label="File: inherits_import";
+    name="inherits_import";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_9fbd137a {
+        node_73653472;
+        label="Class: BaseScales";
+        name="BaseScales";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_ccf391b3 {
+        node_b955e9fa;
+        label="Class: MajorScales";
+        name="MajorScales";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_75d6d628 {
+        node_4a12c70e;
+        label="Class: PentatonicScales";
+        name="PentatonicScales";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+}

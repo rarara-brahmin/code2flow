@@ -1,0 +1,10 @@
+[
+ <Node token=(global) parent=<Group token=exclude_modules_a type=File>>,
+ <Node token=a parent=<Group token=exclude_modules_a type=File>>, 
+ <Node token=b parent=<Group token=exclude_modules_a type=File>>, 
+ <Node token=match parent=<Group token=exclude_modules_b type=File>>]
+
+[
+<Group token=exclude_modules_a type=File>, 
+<Group token=exclude_modules_b type=File>
+]

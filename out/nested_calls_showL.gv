@@ -1,0 +1,45 @@
+digraph G {
+concentrate=true;
+splines="ortho";
+rankdir="LR";
+subgraph legend{
+    rank = min;
+    label = "legend";
+    Legend [shape=none, margin=0, label = <
+        <table cellspacing="0" cellpadding="0" border="1"><tr><td>Code2flow Legend</td></tr><tr><td>
+        <table cellspacing="0">
+        <tr><td>Regular function</td><td width="50px" bgcolor='#cccccc'></td></tr>
+        <tr><td>Trunk function (nothing calls this)</td><td bgcolor='#966F33'></td></tr>
+        <tr><td>Leaf function (this calls nothing else)</td><td bgcolor='#6db33f'></td></tr>
+        <tr><td>Function call</td><td><font color='black'>&#8594;</font></td></tr>
+        </table></td></tr></table>
+        >];
+}node_1e32401c [label="5: print()" name="builtins::builtins.print" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_db2c62fa [label="0: (global)()" name="nested_calls::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_10ff5100 [label="9: do_something()" name="nested_calls::do_something" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_f6f231b0 [label="3: trace()" name="nested_calls::trace" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_db2c62fa -> node_f6f231b0 [color="#56B4E9" penwidth="2"];
+node_db2c62fa -> node_f6f231b0 [color="#56B4E9" penwidth="2"];
+node_f6f231b0 -> node_1e32401c [color="#000000" penwidth="2"];
+node_f6f231b0 -> node_10ff5100 [color="#000000" penwidth="2"];
+subgraph cluster_7b149ec8 {
+    label="File: builtins";
+    name="builtins";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_6d0584e3 {
+        node_1e32401c;
+        label="Built-in Functions: builtins";
+        name="builtins";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_1198d149 {
+    node_db2c62fa node_f6f231b0 node_10ff5100;
+    label="File: nested_calls";
+    name="nested_calls";
+    style="filled";
+    graph[style=dotted];
+};
+}

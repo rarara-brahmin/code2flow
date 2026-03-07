@@ -35,6 +35,7 @@ def is_installed(executable_cmd):
     :param list[str] individual_files:
     :rtype: str
     """
+    print("log is_installed:", executable_cmd)
     for path in os.environ["PATH"].split(os.pathsep):
         path = path.strip('"')
         exe_file = os.path.join(path, executable_cmd)
@@ -232,12 +233,12 @@ class Call():
 
     def matches_variable(self, variable):
         """
-        Call(関数呼び出し式)が、本メソッドに与えられたVariableによって「作用されている(対象になっている）」かを判定し、
-        対応する Node(または特殊値)を返す。主に以下の2種類の呼び出しを区別して処理する。
-        例えば'obj'という変数が以下の式から生成され、
-            obj = Obj()
-        以下のように呼び出された場合、
-            obj.do_something()
+        Call(関数呼び出し式)が、本メソッドに与えられたVariableのメソッドかを判定し、
+        対応する Node(または特殊値)を返す。
+        例えば'obj'という変数が
+        obj = Obj()
+        から生成され、
+        obj.do_something()のように呼び出された場合、
         do_somethingノードがobjからリターンされる。
 
         引数: variable — Variable インスタンス（token, points_to を持つ）
@@ -247,19 +248,13 @@ class Call():
             マッチしない場合は None
         この変数が呼び出しの対象であるかどうかを確認する。
 
-        Check whether this variable is what the call is acting on.
-        For example, if we had 'obj' from
-            obj = Obj()
-        as a variable and a call of
-            obj.do_something()
-        Those would match and we would return the "do_something" node from obj.
-
         :param variable Variable:
         :rtype: Node
         """
 
-        # 
+        print("log matches_variable:", self.to_string(), variable.to_string())
         if self.is_attr():
+            # 関数がオブジェクトのメソッド(=属性)かを判別する。
             # ライブラリ呼び出しはver = lib_name.func_name()という形になるので
             # owner_tokenにはlib_name、variable.tokenにはvarが入る。
             # 通常の関数の場合にはowner_tokenとvariable.tokenが一致する。
@@ -267,45 +262,60 @@ class Call():
             #   格納対象はast.Callクラスのfuncプロパティ(Name型)のidプロパティである。
             #   https://docs.python.org/3/library/ast.html#ast.Call
             if self.owner_token == variable.token or self.is_library:
-                # owner_token == variable.tokenの条件を満たしていなくても通してよいケースとは？
-                # ⇒ライブラリの呼び出しである場合。
-                #  ライブラリの一覧を持っておいてowner_tokenと照合する？
-                #  Callの中にライブラリか否かの情報を持っておけないだろうか？
-                # ⇒持たせてみた
+                # ライブラリ呼び出しの場合は、obj.func_name()ではなくlib_name.func_name()になるため、
+                # self.owner_token == variable.tokenの条件を満たさない。
+                # そのためライブラリか否かをあらかじめフラグとして持たせて判定する。
+
                 for node in getattr(variable.points_to, 'nodes', []):
-                    # variable.point_toオブジェクトのnodes属性(nodeのリスト?)を取り出す。
+                    # variable.point_toオブジェクトのnodes属性の中から
+                    # token(関数名)に一致しているものを抽出する。
                     if self.token == node.token:
                         return node
 
                 for inherit_nodes in getattr(variable.points_to, 'inherits', []):
+                    # variable.point_toオブジェクトのnodes属性の中から
+                    # 継承先ノードを抽出する。
                     for node in inherit_nodes:
                         if self.token == node.token:
                             return node
 
                 if variable.points_to in OWNER_CONST:
+                    # variable.points_toがUnknownの場合
                     return variable.points_to
 
 
             # This section is specifically for resolving namespace variables
             if isinstance(variable.points_to, Group) and variable.points_to.group_type == GROUP_TYPE.NAMESPACE:
                 parts = self.owner_token.split('.')
+                print("log:", variable)
+                print("log parts:", parts)
                 if len(parts) != 2:
                     return None
                 if parts[0] != variable.token:
+                    print("log var.token:", variable.token)
                     return None
                 for node in variable.points_to.all_nodes():
                     if parts[1] == node.namespace_ownership() \
                        and self.token == node.token:
                         return node
 
+            # self.is_attr()の場合はここですべて終了
+            print("log no match attr:", self.to_string(), variable.to_string())
             return None
+        
+
         if self.token == variable.token:
+            print("log:", self.token)
             if isinstance(variable.points_to, Node):
+                print("log var.point_to:", variable.points_to)
                 return variable.points_to
             if isinstance(variable.points_to, Group) \
                and variable.points_to.group_type == GROUP_TYPE.CLASS \
                and variable.points_to.get_constructor():
+                print("log constructor:", variable.points_to.get_constructor())
                 return variable.points_to.get_constructor()
+        
+        print("log no match:", self.token, variable.token)
         return None
 
 
@@ -327,7 +337,6 @@ class Node():
         self.implicit_constructor = implicit_constructor
 
         self.uid = "node_" + os.urandom(4).hex()
-        # ToDo: uidが重複するのを防げない？暗号学的に安全な乱数なので大丈夫かも？
 
         # Assume it is a leaf and a trunk. These are modified later
         self.is_leaf = True  # it calls nothing else
@@ -366,16 +375,16 @@ class Node():
             parent = parent.parent
         return parent
 
-    def is_attr(self):
+    def is_attr(self) -> bool:
         """
         Whether this node is attached to something besides the file
         :rtype: bool
         """
-        return (self.parent
+        return (self.parent is not None
                 and isinstance(self.parent, Group)
                 and self.parent.group_type in (GROUP_TYPE.CLASS, GROUP_TYPE.NAMESPACE))
 
-    def token_with_ownership(self):
+    def token_with_ownership(self) -> str:
         """
         Token which includes what group this is a part of
         :rtype: str
@@ -384,7 +393,7 @@ class Node():
             return djoin(self.parent.token, self.token)
         return self.token
 
-    def namespace_ownership(self):
+    def namespace_ownership(self) -> str:
         """
         Get the ownership excluding namespace
         :rtype: str
@@ -396,7 +405,7 @@ class Node():
             parent = parent.parent
         return djoin(ret)
 
-    def label(self):
+    def label(self) -> str:
         """
         Labels are what you see on the graph
         :rtype: str
@@ -405,6 +414,7 @@ class Node():
             base = f"{self.line_number}: {self.token}()"
         else:
             base = f"{self.token}()"
+        
         # If this node represents an implicit constructor synthesized by the
         # resolver, show a clearer label such as "__init__ (implicit constructor)".
         if getattr(self, 'implicit_constructor', False):
@@ -417,11 +427,13 @@ class Node():
             return f"{base} (NotFound)"
         return base
 
-    def remove_from_parent(self):
+    def remove_from_parent(self) -> None:
         """
         Remove this node from it's parent. This effectively deletes the node.
         :rtype: None
         """
+        print(self.first_group().nodes)
+        print([n for n in self.first_group().nodes if n != self])
         self.first_group().nodes = [n for n in self.first_group().nodes if n != self]
 
     def get_variables(self, line_number=None):
@@ -434,14 +446,18 @@ class Node():
             ret = list(self.variables)
         else:
             # TODO variables should be sorted by scope before line_number
+            # print([v.line_number for v in self.variables if v.line_number <= line_number])
             ret = list([v for v in self.variables if v.line_number <= line_number])
         if any(v.line_number for v in ret):
             ret.sort(key=lambda v: v.line_number, reverse=True)
 
         parent = self.parent
-        while parent:
-            ret += parent.get_variables()
+        if parent:
+            parent_vars = parent.get_variables(line_number)
+            ret += parent_vars
             parent = parent.parent
+
+        print("ret:", [num.token for num in ret], "token:", self.token)
         return ret
 
     def resolve_variables(self, file_groups):

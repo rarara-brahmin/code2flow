@@ -1,0 +1,127 @@
+digraph G {
+concentrate=true;
+splines="ortho";
+rankdir="LR";
+subgraph legend{
+    rank = min;
+    label = "legend";
+    Legend [shape=none, margin=0, label = <
+        <table cellspacing="0" cellpadding="0" border="1"><tr><td>Code2flow Legend</td></tr><tr><td>
+        <table cellspacing="0">
+        <tr><td>Regular function</td><td width="50px" bgcolor='#cccccc'></td></tr>
+        <tr><td>Trunk function (nothing calls this)</td><td bgcolor='#966F33'></td></tr>
+        <tr><td>Leaf function (this calls nothing else)</td><td bgcolor='#6db33f'></td></tr>
+        <tr><td>Function call</td><td><font color='black'>&#8594;</font></td></tr>
+        </table></td></tr></table>
+        >];
+}node_123a75ac [label="astimezone() (NotFound)" name="NotFound::astimezone" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_4b6631e1 [label="close() (NotFound)" name="NotFound::close" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_49402d74 [label="decode() (NotFound)" name="NotFound::decode" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_22aeb28b [label="encode() (NotFound)" name="NotFound::encode" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_b0d3af6a [label="get() (NotFound)" name="NotFound::get" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_3da54054 [label="lower() (NotFound)" name="NotFound::lower" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_d12370ff [label="lstrip() (NotFound)" name="NotFound::lstrip" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_4a33b90e [label="replace() (NotFound)" name="NotFound::replace" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_c67f3c6f [label="setdefault() (NotFound)" name="NotFound::setdefault" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_28079e1e [label="split() (NotFound)" name="NotFound::split" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_a1c93b2c [label="startswith() (NotFound)" name="NotFound::startswith" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_29ba7c20 [label="strip() (NotFound)" name="NotFound::strip" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_17317748 [label="0: (global)()" name="__init__::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_e20f8be0 [label="438: FixedOffset()" name="__init__::FixedOffset" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_c7e26e19 [label="__init__ (implicit constructor)" name="__init__::UTC.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_b4585509 [label="225: fromutc()" name="__init__::UTC.fromutc" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_2fc292ec [label="242: localize()" name="__init__::UTC.localize" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_f429977a [label="248: normalize()" name="__init__::UTC.normalize" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_76a61a10 [label="__init__ (implicit constructor)" name="__init__::_CountryNameDict.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_6ab3dc6d [label="378: _fill()" name="__init__::_CountryNameDict._fill" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_7d0cf604 [label="__init__ (implicit constructor)" name="__init__::_CountryTimezoneDict.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_cf0b5f5f [label="349: _fill()" name="__init__::_CountryTimezoneDict._fill" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_af3e3b16 [label="402: __init__()" name="__init__::_FixedOffset.__init__" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_1b298d90 [label="423: localize()" name="__init__::_FixedOffset.localize" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_0addbcd7 [label="429: normalize()" name="__init__::_FixedOffset.normalize" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_a91523bb [label="201: _case_insensitive_zone_lookup()" name="__init__::_case_insensitive_zone_lookup" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_c69a4c0f [label="508: _test()" name="__init__::_test" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_fd78da0b [label="193: _unmunge_zone()" name="__init__::_unmunge_zone" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_250212a5 [label="47: ascii()" name="__init__::ascii" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_8a8522fe [label="78: open_resource()" name="__init__::open_resource" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_2a7fb36d [label="111: resource_exists()" name="__init__::resource_exists" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_c81a578e [label="130: timezone()" name="__init__::timezone" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_17317748 -> node_c7e26e19 [color="#000000" penwidth="2"];
+node_17317748 -> node_76a61a10 [color="#000000" penwidth="2"];
+node_17317748 -> node_7d0cf604 [color="#000000" penwidth="2"];
+node_17317748 -> node_c69a4c0f [color="#000000" penwidth="2"];
+node_e20f8be0 -> node_b0d3af6a [color="#000000" penwidth="2"];
+node_e20f8be0 -> node_c67f3c6f [color="#000000" penwidth="2"];
+node_e20f8be0 -> node_af3e3b16 [color="#000000" penwidth="2"];
+node_b4585509 -> node_b4585509 [color="#E69F00" penwidth="2"];
+node_b4585509 -> node_2fc292ec [color="#E69F00" penwidth="2"];
+node_2fc292ec -> node_4a33b90e [color="#F0E442" penwidth="2"];
+node_f429977a -> node_123a75ac [color="#56B4E9" penwidth="2"];
+node_6ab3dc6d -> node_49402d74 [color="#0072B2" penwidth="2"];
+node_6ab3dc6d -> node_28079e1e [color="#0072B2" penwidth="2"];
+node_6ab3dc6d -> node_a1c93b2c [color="#0072B2" penwidth="2"];
+node_6ab3dc6d -> node_29ba7c20 [color="#0072B2" penwidth="2"];
+node_6ab3dc6d -> node_8a8522fe [color="#0072B2" penwidth="2"];
+node_cf0b5f5f -> node_49402d74 [color="#CC79A7" penwidth="2"];
+node_cf0b5f5f -> node_28079e1e [color="#CC79A7" penwidth="2"];
+node_cf0b5f5f -> node_a1c93b2c [color="#CC79A7" penwidth="2"];
+node_cf0b5f5f -> node_8a8522fe [color="#CC79A7" penwidth="2"];
+node_1b298d90 -> node_4a33b90e [color="#000000" penwidth="2"];
+node_0addbcd7 -> node_123a75ac [color="#CC79A7" penwidth="2"];
+node_a91523bb -> node_3da54054 [color="#009E73" penwidth="2"];
+node_a91523bb -> node_3da54054 [color="#009E73" penwidth="2"];
+node_fd78da0b -> node_4a33b90e [color="#009E73" penwidth="2"];
+node_fd78da0b -> node_4a33b90e [color="#009E73" penwidth="2"];
+node_250212a5 -> node_49402d74 [color="#0072B2" penwidth="2"];
+node_250212a5 -> node_22aeb28b [color="#0072B2" penwidth="2"];
+node_8a8522fe -> node_d12370ff [color="#D55E00" penwidth="2"];
+node_8a8522fe -> node_28079e1e [color="#D55E00" penwidth="2"];
+node_2a7fb36d -> node_4b6631e1 [color="#0072B2" penwidth="2"];
+node_2a7fb36d -> node_8a8522fe [color="#0072B2" penwidth="2"];
+node_c81a578e -> node_a91523bb [color="#D55E00" penwidth="2"];
+node_c81a578e -> node_fd78da0b [color="#D55E00" penwidth="2"];
+node_c81a578e -> node_250212a5 [color="#D55E00" penwidth="2"];
+node_c81a578e -> node_8a8522fe [color="#D55E00" penwidth="2"];
+subgraph cluster_7b22b54c {
+    node_49402d74 node_22aeb28b node_28079e1e node_d12370ff node_4b6631e1 node_4a33b90e node_3da54054 node_b0d3af6a node_c67f3c6f node_123a75ac node_a1c93b2c node_29ba7c20;
+    label="File: NotFound";
+    name="NotFound";
+    style="filled";
+    graph[style=dotted];
+};
+subgraph cluster_220556fe {
+    node_17317748 node_250212a5 node_8a8522fe node_2a7fb36d node_c81a578e node_fd78da0b node_a91523bb node_e20f8be0 node_c69a4c0f;
+    label="File: __init__";
+    name="__init__";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_d19baf84 {
+        node_b4585509 node_2fc292ec node_f429977a node_c7e26e19;
+        label="Class: UTC";
+        name="UTC";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_ac0392d0 {
+        node_cf0b5f5f node_7d0cf604;
+        label="Class: _CountryTimezoneDict";
+        name="_CountryTimezoneDict";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_46992e0b {
+        node_6ab3dc6d node_76a61a10;
+        label="Class: _CountryNameDict";
+        name="_CountryNameDict";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_8b437f36 {
+        node_af3e3b16 node_1b298d90 node_0addbcd7;
+        label="Class: _FixedOffset";
+        name="_FixedOffset";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+}

@@ -1,0 +1,30 @@
+digraph G {
+concentrate=true;
+splines="ortho";
+rankdir="LR";
+subgraph legend{
+    rank = min;
+    label = "legend";
+    Legend [shape=none, margin=0, label = <
+        <table cellspacing="0" cellpadding="0" border="1"><tr><td>Code2flow Legend</td></tr><tr><td>
+        <table cellspacing="0">
+        <tr><td>Regular function</td><td width="50px" bgcolor='#cccccc'></td></tr>
+        <tr><td>Trunk function (nothing calls this)</td><td bgcolor='#966F33'></td></tr>
+        <tr><td>Leaf function (this calls nothing else)</td><td bgcolor='#6db33f'></td></tr>
+        <tr><td>Function call</td><td><font color='black'>&#8594;</font></td></tr>
+        </table></td></tr></table>
+        >];
+}node_d5b65666 [label="0: (global)()" name="nested_calls::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_0f4fe58a [label="9: do_something()" name="nested_calls::do_something" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_c1e3c4db [label="3: trace()" name="nested_calls::trace" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_d5b65666 -> node_c1e3c4db [color="#D55E00" penwidth="2"];
+node_d5b65666 -> node_c1e3c4db [color="#D55E00" penwidth="2"];
+node_c1e3c4db -> node_0f4fe58a [color="#009E73" penwidth="2"];
+subgraph cluster_1b6533cb {
+    node_d5b65666 node_c1e3c4db node_0f4fe58a;
+    label="File: nested_calls";
+    name="nested_calls";
+    style="filled";
+    graph[style=dotted];
+};
+}

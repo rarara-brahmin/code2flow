@@ -1,0 +1,101 @@
+@startuml
+' Object diagram generated from debugger Locals
+
+object alias_labels {
+  value = False
+}
+
+object extension {
+  value = svg
+}
+
+object final_img_filename {
+  value = out\\exclude_modules_b.svg
+}
+
+object output_file {
+  value = out\\exclude_modules_b.gv
+}
+
+object output_ext {
+  value = svg
+}
+
+object fh {
+  type = TextIO
+  name = out\\exclude_modules_b.gv
+}
+
+object start_time {
+  value = 1769169626.4578705
+}
+
+object language {
+  value = py
+}
+
+object sources {
+  value = [tests\\test_code\\py\\exclude_modules_two_files\\exclude_modules_a.py]
+}
+
+object raw_source_paths {
+  value = [tests\\test_code\\py\\exclude_modules_two_files\\exclude_modules_a.py]
+}
+
+object file_groups_count {
+  value = 2
+}
+
+object Group_exclude_modules_a {
+  token = exclude_modules_a
+  type = File
+}
+
+object Group_exclude_modules_b {
+  token = exclude_modules_b
+  type = File
+}
+
+object Node_global {
+  token = (global)
+}
+
+object Node_a {
+  token = a
+}
+
+object Node_b {
+  token = b
+}
+
+object Node_match {
+  token = match
+}
+
+object Edge1 {
+  label = "(global) -> a"
+}
+
+object Edge2 {
+  label = "(global) -> b"
+}
+
+object Edge3 {
+  label = "b -> match"
+}
+
+' Associations: node ownership
+Node_global --> Group_exclude_modules_a
+Node_a --> Group_exclude_modules_a
+Node_b --> Group_exclude_modules_a
+Node_match --> Group_exclude_modules_b
+
+' Edge links
+Edge1 ..> Node_global
+Edge1 ..> Node_a
+Edge2 ..> Node_global
+Edge2 ..> Node_b
+Edge3 ..> Node_b
+Edge3 ..> Node_match
+
+@enduml

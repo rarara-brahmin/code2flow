@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Python File",
+            "type": "debugpy",
+            "request": "launch",
+            // "program": "${file}",
+            "module": "code2flow",
+            "args": [
+                "tests\\test_code\\py\\exclude_modules_two_files\\exclude_modules_a.py", 
+                "-o", "out\\exclude_modules_b.svg",
+                "level=logging.DEBUG"
+
+            ]
+        }
+    ]
+}

@@ -1,0 +1,48 @@
+digraph G {
+concentrate=true;
+splines="ortho";
+rankdir="LR";
+subgraph legend{
+    rank = min;
+    label = "legend";
+    Legend [shape=none, margin=0, label = <
+        <table cellspacing="0" cellpadding="0" border="1"><tr><td>Code2flow Legend</td></tr><tr><td>
+        <table cellspacing="0">
+        <tr><td>Regular function</td><td width="50px" bgcolor='#cccccc'></td></tr>
+        <tr><td>Trunk function (nothing calls this)</td><td bgcolor='#966F33'></td></tr>
+        <tr><td>Leaf function (this calls nothing else)</td><td bgcolor='#6db33f'></td></tr>
+        <tr><td>Function call</td><td><font color='black'>&#8594;</font></td></tr>
+        </table></td></tr></table>
+        >];
+}node_d20c5ce8 [label="1: abra2()" name="abra::abra2" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_36133f11 [label="1: cadabra2()" name="cadabra::cadabra2" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_33fb866e [label="0: (global)()" name="import_paths::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_e98e9003 [label="5: main()" name="import_paths::main" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_dbde5c78 [label="10: main2()" name="import_paths::main2" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_33fb866e -> node_e98e9003 [color="#D55E00" penwidth="2"];
+node_e98e9003 -> node_d20c5ce8 [color="#009E73" penwidth="2"];
+node_e98e9003 -> node_36133f11 [color="#009E73" penwidth="2"];
+node_e98e9003 -> node_dbde5c78 [color="#009E73" penwidth="2"];
+node_dbde5c78 -> node_d20c5ce8 [color="#000000" penwidth="2"];
+subgraph cluster_e73abfb8 {
+    node_d20c5ce8;
+    label="File: abra";
+    name="abra";
+    style="filled";
+    graph[style=dotted];
+};
+subgraph cluster_02806cb5 {
+    node_36133f11;
+    label="File: cadabra";
+    name="cadabra";
+    style="filled";
+    graph[style=dotted];
+};
+subgraph cluster_42a2d406 {
+    node_33fb866e node_e98e9003 node_dbde5c78;
+    label="File: import_paths";
+    name="import_paths";
+    style="filled";
+    graph[style=dotted];
+};
+}

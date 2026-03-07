@@ -1,0 +1,268 @@
+digraph G {
+concentrate=true;
+splines="ortho";
+rankdir="LR";
+subgraph legend{
+    rank = min;
+    label = "legend";
+    Legend [shape=none, margin=0, label = <
+        <table cellspacing="0" cellpadding="0" border="1"><tr><td>Code2flow Legend</td></tr><tr><td>
+        <table cellspacing="0">
+        <tr><td>Regular function</td><td width="50px" bgcolor='#cccccc'></td></tr>
+        <tr><td>Trunk function (nothing calls this)</td><td bgcolor='#966F33'></td></tr>
+        <tr><td>Leaf function (this calls nothing else)</td><td bgcolor='#6db33f'></td></tr>
+        <tr><td>Function call</td><td><font color='black'>&#8594;</font></td></tr>
+        </table></td></tr></table>
+        >];
+}node_52f8c351 [label="astimezone() (NotFound)" name="NotFound::astimezone" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_0d35efb9 [label="close() (NotFound)" name="NotFound::close" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_e0a64a74 [label="decode() (NotFound)" name="NotFound::decode" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_dd5c49e3 [label="encode() (NotFound)" name="NotFound::encode" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_5c7607eb [label="get() (NotFound)" name="NotFound::get" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_595e1663 [label="lower() (NotFound)" name="NotFound::lower" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_6bfbc7ba [label="lstrip() (NotFound)" name="NotFound::lstrip" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_ed6504dd [label="replace() (NotFound)" name="NotFound::replace" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_d785e037 [label="setdefault() (NotFound)" name="NotFound::setdefault" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_9ad0b037 [label="split() (NotFound)" name="NotFound::split" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_4585b812 [label="startswith() (NotFound)" name="NotFound::startswith" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_fa54113f [label="strip() (NotFound)" name="NotFound::strip" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_79b1b053 [label="0: (global)()" name="__init__::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_54ee6db2 [label="438: FixedOffset()" name="__init__::FixedOffset" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_1dfa0985 [label="__init__ (implicit constructor)" name="__init__::UTC.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_c29605ef [label="225: fromutc()" name="__init__::UTC.fromutc" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_2ea44ee9 [label="242: localize()" name="__init__::UTC.localize" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_1231eca1 [label="248: normalize()" name="__init__::UTC.normalize" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_ca4b889a [label="__init__ (implicit constructor)" name="__init__::_CountryNameDict.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_2678d54c [label="378: _fill()" name="__init__::_CountryNameDict._fill" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_a4b658d4 [label="__init__ (implicit constructor)" name="__init__::_CountryTimezoneDict.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_910758c1 [label="349: _fill()" name="__init__::_CountryTimezoneDict._fill" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_94677dc3 [label="402: __init__()" name="__init__::_FixedOffset.__init__" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_46f2fb00 [label="423: localize()" name="__init__::_FixedOffset.localize" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_d51616c1 [label="429: normalize()" name="__init__::_FixedOffset.normalize" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_9f26a3a7 [label="201: _case_insensitive_zone_lookup()" name="__init__::_case_insensitive_zone_lookup" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_030c6ed1 [label="170: upper()" name="__init__::_case_insensitive_zone_lookup.upper" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_872044fe [label="301: _p()" name="__init__::_p" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_e801a86a [label="508: _test()" name="__init__::_test" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_5295d666 [label="193: _unmunge_zone()" name="__init__::_unmunge_zone" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_528b41f0 [label="47: ascii()" name="__init__::ascii" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_58848106 [label="361: append()" name="__init__::data.append" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_0cdae7f9 [label="209: timedelta()" name="__init__::datetime.timedelta" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_d01179d6 [label="206: get()" name="__init__::dict.get" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_b2365f6d [label="512: testmod()" name="__init__::doctest.testmod" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_9885ecad [label="78: open_resource()" name="__init__::open_resource" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_65260bd0 [label="186: close()" name="__init__::open_resource.close" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_eda638e7 [label="382: readlines()" name="__init__::open_resource.readlines" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_d6731e45 [label="95: dirname()" name="__init__::os.dirname" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_ec9326fb [label="97: exists()" name="__init__::os.exists" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_b65ed333 [label="91: get()" name="__init__::os.get" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_066e3c66 [label="93: join()" name="__init__::os.join" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_f755ded7 [label="107: resource_stream()" name="__init__::pkg_resources.resource_stream" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_683e48ff [label="168: UnknownTimeZoneError()" name="__init__::pytz.UnknownTimeZoneError" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_fc9b384c [label="184: build_tzinfo()" name="__init__::pytz.build_tzinfo" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_33ea5fbc [label="307: unpickler()" name="__init__::pytz.unpickler" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_e27f8763 [label="111: resource_exists()" name="__init__::resource_exists" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_3d247d1e [label="510: insert()" name="__init__::sys.insert" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_ea9ac6d8 [label="130: timezone()" name="__init__::timezone" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_a0d7ad3f [label="90: ValueError()" name="builtins::builtins.ValueError" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_675b7d78 [label="403: abs()" name="builtins::builtins.abs" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_3805cf27 [label="205: dict()" name="builtins::builtins.dict" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_fa4a15a5 [label="108: open()" name="builtins::builtins.open" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_69151091 [label="228: super()" name="builtins::builtins.super" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_02731db1 [label="56: type()" name="builtins::builtins.type" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_79b1b053 -> node_1dfa0985 [color="#009E73" penwidth="2"];
+node_79b1b053 -> node_ca4b889a [color="#009E73" penwidth="2"];
+node_79b1b053 -> node_a4b658d4 [color="#009E73" penwidth="2"];
+node_79b1b053 -> node_e801a86a [color="#009E73" penwidth="2"];
+node_79b1b053 -> node_0cdae7f9 [color="#009E73" penwidth="2"];
+node_79b1b053 -> node_0cdae7f9 [color="#009E73" penwidth="2"];
+node_54ee6db2 -> node_5c7607eb [color="#56B4E9" penwidth="2"];
+node_54ee6db2 -> node_d785e037 [color="#56B4E9" penwidth="2"];
+node_54ee6db2 -> node_94677dc3 [color="#56B4E9" penwidth="2"];
+node_c29605ef -> node_c29605ef [color="#CC79A7" penwidth="2"];
+node_c29605ef -> node_2ea44ee9 [color="#CC79A7" penwidth="2"];
+node_c29605ef -> node_69151091 [color="#CC79A7" penwidth="2"];
+node_2ea44ee9 -> node_ed6504dd [color="#E69F00" penwidth="2"];
+node_2ea44ee9 -> node_a0d7ad3f [color="#E69F00" penwidth="2"];
+node_1231eca1 -> node_52f8c351 [color="#E69F00" penwidth="2"];
+node_1231eca1 -> node_a0d7ad3f [color="#E69F00" penwidth="2"];
+node_2678d54c -> node_e0a64a74 [color="#F0E442" penwidth="2"];
+node_2678d54c -> node_9ad0b037 [color="#F0E442" penwidth="2"];
+node_2678d54c -> node_4585b812 [color="#F0E442" penwidth="2"];
+node_2678d54c -> node_fa54113f [color="#F0E442" penwidth="2"];
+node_2678d54c -> node_9885ecad [color="#F0E442" penwidth="2"];
+node_2678d54c -> node_65260bd0 [color="#F0E442" penwidth="2"];
+node_2678d54c -> node_eda638e7 [color="#F0E442" penwidth="2"];
+node_910758c1 -> node_e0a64a74 [color="#E69F00" penwidth="2"];
+node_910758c1 -> node_9ad0b037 [color="#E69F00" penwidth="2"];
+node_910758c1 -> node_4585b812 [color="#E69F00" penwidth="2"];
+node_910758c1 -> node_58848106 [color="#E69F00" penwidth="2"];
+node_910758c1 -> node_9885ecad [color="#E69F00" penwidth="2"];
+node_910758c1 -> node_65260bd0 [color="#E69F00" penwidth="2"];
+node_94677dc3 -> node_0cdae7f9 [color="#009E73" penwidth="2"];
+node_94677dc3 -> node_a0d7ad3f [color="#009E73" penwidth="2"];
+node_94677dc3 -> node_675b7d78 [color="#009E73" penwidth="2"];
+node_46f2fb00 -> node_ed6504dd [color="#000000" penwidth="2"];
+node_46f2fb00 -> node_a0d7ad3f [color="#000000" penwidth="2"];
+node_d51616c1 -> node_52f8c351 [color="#E69F00" penwidth="2"];
+node_d51616c1 -> node_a0d7ad3f [color="#E69F00" penwidth="2"];
+node_9f26a3a7 -> node_595e1663 [color="#CC79A7" penwidth="2"];
+node_9f26a3a7 -> node_595e1663 [color="#CC79A7" penwidth="2"];
+node_9f26a3a7 -> node_d01179d6 [color="#CC79A7" penwidth="2"];
+node_9f26a3a7 -> node_3805cf27 [color="#CC79A7" penwidth="2"];
+node_872044fe -> node_33ea5fbc [color="#D55E00" penwidth="2"];
+node_e801a86a -> node_b2365f6d [color="#56B4E9" penwidth="2"];
+node_e801a86a -> node_3d247d1e [color="#56B4E9" penwidth="2"];
+node_5295d666 -> node_ed6504dd [color="#D55E00" penwidth="2"];
+node_5295d666 -> node_ed6504dd [color="#D55E00" penwidth="2"];
+node_528b41f0 -> node_e0a64a74 [color="#000000" penwidth="2"];
+node_528b41f0 -> node_dd5c49e3 [color="#000000" penwidth="2"];
+node_528b41f0 -> node_02731db1 [color="#000000" penwidth="2"];
+node_9885ecad -> node_6bfbc7ba [color="#0072B2" penwidth="2"];
+node_9885ecad -> node_9ad0b037 [color="#0072B2" penwidth="2"];
+node_9885ecad -> node_d6731e45 [color="#0072B2" penwidth="2"];
+node_9885ecad -> node_ec9326fb [color="#0072B2" penwidth="2"];
+node_9885ecad -> node_b65ed333 [color="#0072B2" penwidth="2"];
+node_9885ecad -> node_066e3c66 [color="#0072B2" penwidth="2"];
+node_9885ecad -> node_066e3c66 [color="#0072B2" penwidth="2"];
+node_9885ecad -> node_f755ded7 [color="#0072B2" penwidth="2"];
+node_9885ecad -> node_a0d7ad3f [color="#0072B2" penwidth="2"];
+node_9885ecad -> node_fa4a15a5 [color="#0072B2" penwidth="2"];
+node_e27f8763 -> node_0d35efb9 [color="#009E73" penwidth="2"];
+node_e27f8763 -> node_9885ecad [color="#009E73" penwidth="2"];
+node_e27f8763 -> node_b65ed333 [color="#009E73" penwidth="2"];
+node_ea9ac6d8 -> node_9f26a3a7 [color="#000000" penwidth="2"];
+node_ea9ac6d8 -> node_030c6ed1 [color="#000000" penwidth="2"];
+node_ea9ac6d8 -> node_5295d666 [color="#000000" penwidth="2"];
+node_ea9ac6d8 -> node_528b41f0 [color="#000000" penwidth="2"];
+node_ea9ac6d8 -> node_9885ecad [color="#000000" penwidth="2"];
+node_ea9ac6d8 -> node_65260bd0 [color="#000000" penwidth="2"];
+node_ea9ac6d8 -> node_683e48ff [color="#000000" penwidth="2"];
+node_ea9ac6d8 -> node_683e48ff [color="#000000" penwidth="2"];
+node_ea9ac6d8 -> node_683e48ff [color="#000000" penwidth="2"];
+node_ea9ac6d8 -> node_fc9b384c [color="#000000" penwidth="2"];
+subgraph cluster_9e354b5c {
+    node_e0a64a74 node_dd5c49e3 node_9ad0b037 node_6bfbc7ba node_0d35efb9 node_ed6504dd node_595e1663 node_5c7607eb node_d785e037 node_52f8c351 node_4585b812 node_fa54113f;
+    label="File: NotFound";
+    name="NotFound";
+    style="filled";
+    graph[style=dotted];
+};
+subgraph cluster_89cda51a {
+    node_79b1b053 node_528b41f0 node_9885ecad node_e27f8763 node_ea9ac6d8 node_5295d666 node_9f26a3a7 node_872044fe node_54ee6db2 node_e801a86a;
+    label="File: __init__";
+    name="__init__";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_3c62f0fb {
+        node_c29605ef node_2ea44ee9 node_1231eca1 node_1dfa0985;
+        label="Class: UTC";
+        name="UTC";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_7507ac38 {
+        node_910758c1 node_a4b658d4;
+        label="Class: _CountryTimezoneDict";
+        name="_CountryTimezoneDict";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_b24277c7 {
+        node_2678d54c node_ca4b889a;
+        label="Class: _CountryNameDict";
+        name="_CountryNameDict";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_02c7f956 {
+        node_94677dc3 node_46f2fb00 node_d51616c1;
+        label="Class: _FixedOffset";
+        name="_FixedOffset";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_533b0d1e {
+        node_0cdae7f9;
+        label="Library: datetime";
+        name="datetime";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_87729dd4 {
+        node_b65ed333 node_066e3c66 node_d6731e45 node_ec9326fb;
+        label="Library: os";
+        name="os";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_69813399 {
+        node_f755ded7;
+        label="Library: pkg_resources";
+        name="pkg_resources";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_050a9266 {
+        node_683e48ff node_fc9b384c node_33ea5fbc;
+        label="Library: pytz";
+        name="pytz";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_3ce59083 {
+        node_030c6ed1;
+        label="Library: _case_insensitive_zone_lookup";
+        name="_case_insensitive_zone_lookup";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_5b727a3b {
+        node_65260bd0 node_eda638e7;
+        label="Library: open_resource";
+        name="open_resource";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_fa44633d {
+        node_d01179d6;
+        label="Library: dict";
+        name="dict";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_64adedad {
+        node_3d247d1e;
+        label="Library: sys";
+        name="sys";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_87cf2edd {
+        node_b2365f6d;
+        label="Library: doctest";
+        name="doctest";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_1255a7c1 {
+        node_58848106;
+        label="Library: data";
+        name="data";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_ea98fd17 {
+    label="File: builtins";
+    name="builtins";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_0f59e053 {
+        node_02731db1 node_a0d7ad3f node_fa4a15a5 node_3805cf27 node_69151091 node_675b7d78;
+        label="Built-in Functions: builtins";
+        name="builtins";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+}

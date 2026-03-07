@@ -1,0 +1,91 @@
+digraph G {
+concentrate=true;
+splines="ortho";
+rankdir="LR";
+subgraph legend{
+    rank = min;
+    label = "legend";
+    Legend [shape=none, margin=0, label = <
+        <table cellspacing="0" cellpadding="0" border="1"><tr><td>Code2flow Legend</td></tr><tr><td>
+        <table cellspacing="0">
+        <tr><td>Regular function</td><td width="50px" bgcolor='#cccccc'></td></tr>
+        <tr><td>Trunk function (nothing calls this)</td><td bgcolor='#966F33'></td></tr>
+        <tr><td>Leaf function (this calls nothing else)</td><td bgcolor='#6db33f'></td></tr>
+        <tr><td>Function call</td><td><font color='black'>&#8594;</font></td></tr>
+        </table></td></tr></table>
+        >];
+}node_0b1cbbc7 [label="9: print()" name="builtins::builtins.print" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_16e58af1 [label="0: (global)()" name="init::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_0bf735ce [label="5: __init__()" name="init::Abra.__init__" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_41c637c2 [label="8: cadabra()" name="init::Abra.cadabra" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_5335698b [label="12: b()" name="init::b" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_4b59a02a [label="17: ProvincialClass()" name="init::the_import.ProvincialClass" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_32b7c4a0 [label="7: __init__()" name="the_import::HiddenClass.__init__" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_45c4117e [label="2: __init__()" name="the_import::ProvincialClass.__init__" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_31c6c23e [label="11: imported_func()" name="the_import::imported_func" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_16e58af1 -> node_5335698b [color="#E69F00" penwidth="2"];
+node_16e58af1 -> node_4b59a02a [color="#E69F00" penwidth="2"];
+node_16e58af1 -> node_32b7c4a0 [color="#E69F00" penwidth="2"];
+node_16e58af1 -> node_31c6c23e [color="#E69F00" penwidth="2"];
+node_0bf735ce -> node_41c637c2 [color="#D55E00" penwidth="2"];
+node_41c637c2 -> node_0b1cbbc7 [color="#56B4E9" penwidth="2"];
+node_5335698b -> node_0bf735ce [color="#009E73" penwidth="2"];
+node_32b7c4a0 -> node_0b1cbbc7 [color="#000000" penwidth="2"];
+node_45c4117e -> node_0b1cbbc7 [color="#D55E00" penwidth="2"];
+node_31c6c23e -> node_0b1cbbc7 [color="#D55E00" penwidth="2"];
+subgraph cluster_309cf4dd {
+    label="File: builtins";
+    name="builtins";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_fdd917dc {
+        node_0b1cbbc7;
+        label="Built-in Functions: builtins";
+        name="builtins";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_2d75e52f {
+    node_16e58af1 node_5335698b;
+    label="File: init";
+    name="init";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_0b2398fa {
+        node_0bf735ce node_41c637c2;
+        label="Class: Abra";
+        name="Abra";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_f53e5fe1 {
+        node_4b59a02a;
+        label="Library: the_import";
+        name="the_import";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_67dfca54 {
+    node_31c6c23e;
+    label="File: the_import";
+    name="the_import";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_056498c6 {
+        node_45c4117e;
+        label="Class: ProvincialClass";
+        name="ProvincialClass";
+        style="filled";
+        graph[style=dotted];
+    };
+    subgraph cluster_fdcfd0c8 {
+        node_32b7c4a0;
+        label="Class: HiddenClass";
+        name="HiddenClass";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+}

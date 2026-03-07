@@ -1,0 +1,103 @@
+@startuml
+
+class all_nodes
+all_nodes --> global
+all_nodes --> a
+all_nodes --> b
+all_nodes --> match_node
+
+' class "parent: Group" as parent {
+'     group_type: FILE
+'     nodes: List[Node]
+'     calls: List[Call]
+' }
+' parent --> global: nodes
+' parent --> a: nodes
+' parent --> b: nodes
+' parent --> a_call: calls
+' parent --> b_call: calls
+
+class file_groups
+class exclude_modules_a_group {
+    token: exclude_modules_a
+    display_type: File
+    group_type: FILE
+    
+    nodes: List[Node]
+}
+exclude_modules_a_group --> global: nodes
+
+class "a: Call" as a_call {
+    token: a
+    owner_token: None
+}
+
+class "b: Call" as b_call {
+    token: b
+    owner_token: None
+}
+
+class "(global): Node" as global {
+    parent: Group
+    group_type: FILE
+    import_tokens: List[Str]
+    calls: List[Call]
+}
+global --> a_call: calls
+global --> b_call: calls
+
+
+class "exclude_modules_a: Node" as exclude_modules_a {
+    parent: Group
+}
+
+global --> exclude_modules_a: parent
+
+
+class "a: Node" as a {
+    parent: Group
+    calls: List[Call]
+    import_tokens: List[Str]
+}
+a --> match_call: calls
+a --> exclude_modules_a: import_tokens
+a --> exclude_modules_a: parent
+
+class "b: Node" as b {
+    parent: Group
+    calls: List[Call]
+}
+b --> match: calls
+b --> exclude_modules_a: parent
+
+class "match: Variable" as match {
+    point_to: Node
+}
+match --> point_to_in_match: point_to
+
+class "point_to: Node" as point_to_in_match {
+    parent: Group
+}
+
+class "exclude_modules_b: Node" as exclude_modules_b {
+    parent: Group
+}
+
+point_to_in_match --> exclude_modules_b: parent
+
+class "re: Variable" as re {
+    point_to: UNKNOWN_MODULE
+}
+
+class "match: Call" as match_call {
+    token: match
+    owner_token: re
+}
+
+class "match: Node" as match_node {
+    parent: Group
+    calls: List[Call]
+}
+
+
+@enduml

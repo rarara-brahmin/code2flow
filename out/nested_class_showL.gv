@@ -1,0 +1,82 @@
+digraph G {
+concentrate=true;
+splines="ortho";
+rankdir="LR";
+subgraph legend{
+    rank = min;
+    label = "legend";
+    Legend [shape=none, margin=0, label = <
+        <table cellspacing="0" cellpadding="0" border="1"><tr><td>Code2flow Legend</td></tr><tr><td>
+        <table cellspacing="0">
+        <tr><td>Regular function</td><td width="50px" bgcolor='#cccccc'></td></tr>
+        <tr><td>Trunk function (nothing calls this)</td><td bgcolor='#966F33'></td></tr>
+        <tr><td>Leaf function (this calls nothing else)</td><td bgcolor='#6db33f'></td></tr>
+        <tr><td>Function call</td><td><font color='black'>&#8594;</font></td></tr>
+        </table></td></tr></table>
+        >];
+}node_b3763697 [label="outer_func() (NotFound)" name="NotFound::outer_func" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_cdde091f [label="8: print()" name="builtins::builtins.print" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_652347c1 [label="0: (global)()" name="nested_class::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_4fd4b96a [label="__init__ (implicit constructor)" name="nested_class::Inner.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_45f2a56d [label="3: inner_func()" name="nested_class::Inner.inner_func" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_60f43850 [label="17: Inner()" name="nested_class::Outer.Inner" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_b46e42e2 [label="11: __init__()" name="nested_class::Outer.__init__" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_e6158018 [label="7: outer_func()" name="nested_class::Outer.outer_func" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_652347c1 -> node_60f43850 [color="#E69F00" penwidth="2"];
+node_652347c1 -> node_b46e42e2 [color="#E69F00" penwidth="2"];
+node_652347c1 -> node_e6158018 [color="#E69F00" penwidth="2"];
+node_45f2a56d -> node_b3763697 [color="#0072B2" penwidth="2"];
+node_45f2a56d -> node_b46e42e2 [color="#0072B2" penwidth="2"];
+node_b46e42e2 -> node_cdde091f [color="#56B4E9" penwidth="2"];
+node_b46e42e2 -> node_4fd4b96a [color="#56B4E9" penwidth="2"];
+node_e6158018 -> node_cdde091f [color="#000000" penwidth="2"];
+node_e6158018 -> node_45f2a56d [color="#000000" penwidth="2"];
+subgraph cluster_83c1a977 {
+    node_b3763697;
+    label="File: NotFound";
+    name="NotFound";
+    style="filled";
+    graph[style=dotted];
+};
+subgraph cluster_c67e59d3 {
+    label="File: builtins";
+    name="builtins";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_39b40812 {
+        node_cdde091f;
+        label="Built-in Functions: builtins";
+        name="builtins";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_e480065b {
+    node_652347c1;
+    label="File: nested_class";
+    name="nested_class";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_c8b6d2e0 {
+        node_e6158018 node_b46e42e2;
+        label="Class: Outer";
+        name="Outer";
+        style="filled";
+        graph[style=dotted];
+        subgraph cluster_fe1855aa {
+            node_45f2a56d node_4fd4b96a;
+            label="Class: Inner";
+            name="Inner";
+            style="filled";
+            graph[style=dotted];
+        };
+    };
+    subgraph cluster_bcc26bd4 {
+        node_60f43850;
+        label="Library: Outer";
+        name="Outer";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+}

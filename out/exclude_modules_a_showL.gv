@@ -1,0 +1,62 @@
+digraph G {
+concentrate=true;
+splines="ortho";
+rankdir="LR";
+subgraph legend{
+    rank = min;
+    label = "legend";
+    Legend [shape=none, margin=0, label = <
+        <table cellspacing="0" cellpadding="0" border="1"><tr><td>Code2flow Legend</td></tr><tr><td>
+        <table cellspacing="0">
+        <tr><td>Regular function</td><td width="50px" bgcolor='#cccccc'></td></tr>
+        <tr><td>Trunk function (nothing calls this)</td><td bgcolor='#966F33'></td></tr>
+        <tr><td>Leaf function (this calls nothing else)</td><td bgcolor='#6db33f'></td></tr>
+        <tr><td>Function call</td><td><font color='black'>&#8594;</font></td></tr>
+        </table></td></tr></table>
+        >];
+}node_af2affce [label="2: print()" name="builtins::builtins.print" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_322c738c [label="0: (global)()" name="exclude_modules_a::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_b8dc120d [label="5: a()" name="exclude_modules_a::a" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_b405bbef [label="9: b()" name="exclude_modules_a::b" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_a0086e6d [label="6: match()" name="exclude_modules_a::re.match" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_6b1c976b [label="1: match()" name="exclude_modules_b::match" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_322c738c -> node_b8dc120d [color="#F0E442" penwidth="2"];
+node_322c738c -> node_b405bbef [color="#F0E442" penwidth="2"];
+node_b8dc120d -> node_a0086e6d [color="#0072B2" penwidth="2"];
+node_b405bbef -> node_6b1c976b [color="#CC79A7" penwidth="2"];
+node_6b1c976b -> node_af2affce [color="#009E73" penwidth="2"];
+subgraph cluster_af7f762f {
+    label="File: builtins";
+    name="builtins";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_889a2f5f {
+        node_af2affce;
+        label="Built-in Functions: builtins";
+        name="builtins";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_f8c32e57 {
+    node_322c738c node_b8dc120d node_b405bbef;
+    label="File: exclude_modules_a";
+    name="exclude_modules_a";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_6495535b {
+        node_a0086e6d;
+        label="Library: re";
+        name="re";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_3cbf23c5 {
+    node_6b1c976b;
+    label="File: exclude_modules_b";
+    name="exclude_modules_b";
+    style="filled";
+    graph[style=dotted];
+};
+}

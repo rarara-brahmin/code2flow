@@ -453,9 +453,6 @@ def make_file_group(tree: ast.AST, filename: str, extension: str) -> Group:
     for subgroup_tree in subgroup_trees:
         file_group.add_subgroup(language.make_class_group(subgroup_tree, parent=file_group))
 
-    # for import_module in import_tree:
-    #     # ToDo: importモジュールを取り出してリストに詰めるが、これでいいのかというと？？？
-    #     file_group.add_import(import_module.names[0])
     for import_module in import_tree:
         for new_node in language.make_import_module_nodes(import_module, parent=file_group):
             # file_group.add_import(new_node)
@@ -899,8 +896,6 @@ def map_it(sources, extension, no_trimming, exclude_namespaces, exclude_function
 
     :rtype: (list[Group], list[Node], list[Edge])
     """
-
-    # ToDo: ここの関数でimportモジュールをnodeに詰めて、呼び出し関係をedgeに詰めれば勝ち
 
     language = LANGUAGES[extension]
 
