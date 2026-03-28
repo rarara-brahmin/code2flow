@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import abc
 import os
-
+from typing import List
 
 TRUNK_COLOR = '#966F33'
 LEAF_COLOR = '#6db33f'
@@ -70,7 +72,7 @@ def flatten(list_of_lists):
 
     return el_list
 
-def _resolve_str_variable(variable, file_groups):
+def _resolve_str_variable(variable, file_groups: List[Group]):
     """
     String variables are when variable.points_to is a string
     This happens ONLY when we have imports that we delayed processing for
